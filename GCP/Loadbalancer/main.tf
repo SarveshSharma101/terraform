@@ -23,8 +23,8 @@ resource "google_compute_network" "default" {
 # backend subnet
 resource "google_compute_subnetwork" "default" {
   name          = "lb-backend-subnet"
-  ip_cidr_range = "10.0.1.0/24"
-  region        = "us-central1"
+  ip_cidr_range = var.vpc-subnet-1
+  region        = var.region
   network       = google_compute_network.default.id
 }
 
@@ -67,7 +67,7 @@ resource "google_compute_backend_service" "default" {
   # custom_response_headers = ["X-Cache-Hit: {cdn_cache_status}"]
   health_checks           = [google_compute_health_check.default.id]
   backend {
-    group           = google_compute_instance_group_manager.default.instance_group
+    group           = !var.use-custom-backend ? google_compute_instance_group_manager.default.instance_group : var.lb-backend
     balancing_mode  = "UTILIZATION"
     capacity_scaler = 1.0
   }
@@ -129,7 +129,7 @@ resource "google_compute_health_check" "default" {
 # MIG
 resource "google_compute_instance_group_manager" "default" {
   name     = "lb-mig1"
-  zone     = "us-central1-c"
+  zone     = var.mig-zone
   named_port {
     name = "http"
     port = 80
@@ -162,7 +162,7 @@ resource "google_compute_firewall" "allow-tcp-pub" {
 		protocol = "tcp"
 		ports = ["80"]
 	}
-	source_ranges = ["0.0.0.0/0"]
+	source_ranges = [var.internet]
 	target_tags = ["pub"]
 }
 
@@ -174,5 +174,5 @@ resource "google_compute_firewall" "allow-ssh" {
 		protocol = "tcp"
 		ports = ["22"]
 	}
-	source_ranges = ["0.0.0.0/0"]
+	source_ranges = [var.internet]
 }
