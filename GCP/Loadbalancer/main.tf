@@ -26,8 +26,8 @@ module "cloud-nat" {
 	depends_on = [ module.vpc ]
 	source = "./modules/Cloud-Nat"
 	project_name = "test"
-	region = module.vpc.vpc.private-subnet[0].region	
-	vpc = module.vpc.vpc.vpc.name
+	region = module.vpc.op.private-subnet[0].region	
+	vpc = module.vpc.op.vpc.name
 }
 
 # module "mig" {
@@ -49,8 +49,8 @@ resource "google_compute_instance" "endpoint-instance-1" {
 	zone = "asia-south1-a"
 
 	network_interface {
-		network = module.vpc.vpc.vpc.name
-		subnetwork = module.vpc.vpc.private-subnet[0].id
+		network = module.vpc.op.vpc.name
+		subnetwork = module.vpc.op.private-subnet[0].id
 		
 	}
 
@@ -79,8 +79,8 @@ resource "google_compute_instance" "endpoint-instance-2" {
 	zone = "asia-south1-a"
 
 	network_interface {
-		network = module.vpc.vpc.vpc.name
-		subnetwork = module.vpc.vpc.private-subnet[0].id
+		network = module.vpc.op.vpc.name
+		subnetwork = module.vpc.op.private-subnet[0].id
 		
 	}
 
@@ -107,8 +107,8 @@ resource "google_compute_instance" "endpoint-instance-2" {
 module "NEG" {
 	source = "./modules/NEG"
 	project_name = "test"
-	vpc = module.vpc.vpc.vpc.name
-	subnet = module.vpc.vpc.private-subnet[0].id
+	vpc = module.vpc.op.vpc.name
+	subnet = module.vpc.op.private-subnet[0].id
 	default_port = "80"
 	zone = "asia-south1-a"
 }

@@ -1,4 +1,4 @@
-output "vpc" {
+output "op" {
     value = {
         vpc = google_compute_network.vpc
         private-subnet = google_compute_subnetwork.private-subnets
