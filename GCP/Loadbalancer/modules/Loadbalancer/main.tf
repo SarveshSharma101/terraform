@@ -39,7 +39,10 @@ resource "google_compute_backend_service" "default" {
   health_checks           = [google_compute_health_check.default.id]
   backend {
     group           = var.lb-backend
-    balancing_mode  = "UTILIZATION"
+    
+    # balancing_mode  = "UTILIZATION"
+    balancing_mode  = "RATE"
+    max_rate = 100
     capacity_scaler = 1.0
   }
 }
