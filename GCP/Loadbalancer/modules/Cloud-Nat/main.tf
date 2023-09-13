@@ -1,18 +1,3 @@
-# terraform {
-# 	required_providers {
-# 		google = {
-# 			source = "hashicorp/google"
-#     version = "4.51.0"
-# 		}
-# 	}
-# }
-
-# provider "google" {
-# 	credentials = file("/mnt/c/Users/ppain/Desktop/mws/t-key/terraform-practice-392512-379f604ce6fb.json")
-
-# 	project = "terraform-practice-392512"
-# }
-
 resource "google_compute_router" "pvt-router" {
 	name = "pvt-router-${var.project_name}"
 	network = var.vpc
